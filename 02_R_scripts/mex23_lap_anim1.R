@@ -21,18 +21,13 @@ remotes::install_github("wilkelab/gridtext")
 
 # https://www.rdocumentation.org/packages/sysfonts/versions/0.8.8/topics/font_families_google
 
-font_add_google("Outfit","outfit")
 font_add_google("Rubik","rubik")
-font_add_google("Rubik Mono One","rubik2")
-font_add_google("Orbitron","orbitron")
-font_add_google("Fira Sans","fira")
 font_add_google("Alfa Slab One", "alfa")
-# font_add_google("Bitter","bit")
-# font_add_google("Roboto", "roboto")
 showtext_auto()
 
 # 4 (optional) Chequered flag----
 # 4.1* development----
+# http://sape.inf.usi.ch/quick-reference/ggplot2/geom_rect
 d=data.frame(x1=c(1,3,1,5,4), x2=c(2,4,3,6,6), y1=c(1,1,4,1,3), y2=c(2,2,5,3,5), t=c('a','a','a','b','b'), r=c(1,2,3,4,5))
 ggplot() + 
   scale_x_continuous(name="x") + 
@@ -70,9 +65,6 @@ ggplot() +
   scale_fill_identity() +
   geom_rect(data=d2, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=fill), inherit.aes = FALSE, alpha=0.5) +
   geom_text(data=d2, aes(x=x1+(x2-x1)/2, y=y1+(y2-y1)/2, label=r), size=20)
-
-f1_constructors_rank_by_race2_chequred <- f1_constructors_rank_by_race2 %>% 
-  mutate(stripe_x = factor(ifelse(rank %% 2 == 0, 1, 0)))
 
 # 4.3* 7 x 7 with scale appropriate to annimate plot----
 d3 <- data.frame(x1 = c(1, 10, 20, 30, 40, 50, 60,
@@ -123,6 +115,9 @@ d3 <- data.frame(x1 = c(1, 10, 20, 30, 40, 50, 60,
 # data https://www.statsf1.com/en/2023/mexico-city/tour-par-tour.aspx
 
 # 5.1* Colours----
+# https://www.reddit.com/r/Formula1Point5/comments/sri1rf/here_are_the_color_hex_codes_for_mclaren_mcl36/?rdt=56811
+# https://teamcolorcodes.com
+
 McLaren_colours_main <- c('#FF8000', '#00843D')
 
 # 5.2* Data----
