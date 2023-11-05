@@ -67,49 +67,66 @@ ggplot() +
   geom_text(data=d2, aes(x=x1+(x2-x1)/2, y=y1+(y2-y1)/2, label=r), size=20)
 
 # 4.3* 7 x 7 with scale appropriate to annimate plot----
-d3 <- data.frame(x1 = c(1, 10, 20, 30, 40, 50, 60,
-                        1, 10, 20, 30, 40, 50, 60,
-                        1, 10, 20, 30, 40, 50, 60,
-                        1, 10, 20, 30, 40, 50, 60,
-                        1, 10, 20, 30, 40, 50, 60,
-                        1, 10, 20, 30, 40, 50, 60,
-                        1, 10, 20, 30, 40, 50, 60), x2 = c(10, 20, 30, 40, 50, 60, 70,
-                                                           10, 20, 30, 40, 50, 60, 70,
-                                                           10, 20, 30, 40, 50, 60, 70,
-                                                           10, 20, 30, 40, 50, 60, 70,
-                                                           10, 20, 30, 40, 50, 60, 70,
-                                                           10, 20, 30, 40, 50, 60, 70,
-                                                           10, 20, 30, 40, 50, 60, 70), y1 = c(-0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5,
-                                                                                               2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
-                                                                                               5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5,
-                                                                                               8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5,
-                                                                                               11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5,
-                                                                                               14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5,
-                                                                                               17.5, 17.5, 17.5, 17.5, 17.5, 17.5, 17.5), y2 = c(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
-                                                                                                                                                 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5,
-                                                                                                                                                 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5,
-                                                                                                                                                 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5,
-                                                                                                                                                 14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5,
-                                                                                                                                                 17.5, 17.5, 17.5, 17.5, 17.5, 17.5, 17.5,
-                                                                                                                                                 20.5, 20.5, 20.5, 20.5, 20.5, 20.5, 20.5), t=c('a', 'b', 'a', 'b', 'a', 'b', 'a',
-                                                                                                                                                                                                'b', 'a', 'b', 'a', 'b', 'a', 'b',
-                                                                                                                                                                                                'a', 'b', 'a', 'b', 'a', 'b', 'a',
-                                                                                                                                                                                                'b', 'a', 'b', 'a', 'b', 'a', 'b',
-                                                                                                                                                                                                'a', 'b', 'a', 'b', 'a', 'b', 'a',
-                                                                                                                                                                                                'b', 'a', 'b', 'a', 'b', 'a', 'b',
-                                                                                                                                                                                                'a', 'b', 'a', 'b', 'a', 'b', 'a'), r=c(1, 2, 3, 4, 5, 6, 7, 
-                                                                                                                                                                                                                                        8, 9, 10, 11, 12, 13, 14, 
-                                                                                                                                                                                                                                        15, 16, 17, 18, 19, 20, 21, 
-                                                                                                                                                                                                                                        22, 23, 24, 25, 26, 27, 28,
-                                                                                                                                                                                                                                        29, 30, 31, 32, 33, 34, 35,
-                                                                                                                                                                                                                                        36, 37, 38, 39, 40, 41, 42,
-                                                                                                                                                                                                                                        42, 44, 45, 46, 47, 48, 49), fill = c('#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', 
-                                                                                                                                                                                                                                                                              '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', 
-                                                                                                                                                                                                                                                                              '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d',
-                                                                                                                                                                                                                                                                              '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000',
-                                                                                                                                                                                                                                                                              '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d',
-                                                                                                                                                                                                                                                                              '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000',
-                                                                                                                                                                                                                                                                              '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d'))
+d3 <- data.frame(x1 = c(-10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70,
+                        -10, 0, 10, 20, 30, 40, 50, 60, 70), x2 = c(0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80,
+                                                                    0, 10, 20, 30, 40, 50, 60, 70, 80), y1 = c(-0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5,
+                                                                                                               2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                                                                               4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5,
+                                                                                                               7, 7, 7, 7, 7, 7, 7, 7, 7,
+                                                                                                               9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5,
+                                                                                                               12, 12, 12, 12, 12, 12, 12, 12, 12,
+                                                                                                               14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5,
+                                                                                                               17, 17, 17, 17, 17, 17, 17, 17, 17,
+                                                                                                               19.5, 19.5, 19.5, 19.5, 19.5, 19.5, 19.5, 19.5, 19.5), y2 = c(2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                                                                                                                                             4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5,
+                                                                                                                                                                             7, 7, 7, 7, 7, 7, 7, 7, 7,
+                                                                                                                                                                             9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5,
+                                                                                                                                                                             12, 12, 12, 12, 12, 12, 12, 12, 12,
+                                                                                                                                                                             14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5, 14.5,
+                                                                                                                                                                             17, 17, 17, 17, 17, 17, 17, 17, 17,
+                                                                                                                                                                             19.5, 19.5, 19.5, 19.5, 19.5, 19.5, 19.5, 19.5, 19.5,
+                                                                                                                                                                             22, 22, 22, 22, 22, 22, 22, 22, 22), t=c('a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a',
+                                                                                                                                                                                                                      'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b',
+                                                                                                                                                                                                                      'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a',
+                                                                                                                                                                                                                      'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b',
+                                                                                                                                                                                                                      'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a',
+                                                                                                                                                                                                                      'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b',
+                                                                                                                                                                                                                      'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a',
+                                                                                                                                                                                                                      'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b',
+                                                                                                                                                                                                                      'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a'), r=c(1, 2, 3, 4, 5, 6, 7, 8, 9, 
+                                                                                                                                                                                                                                                                        10, 11, 12, 13, 14, 15, 16, 17, 18, 
+                                                                                                                                                                                                                                                                        19, 20, 21, 22, 23, 24, 25, 26, 27, 
+                                                                                                                                                                                                                                                                        28, 29, 30, 31, 32, 33, 34, 35, 36, 
+                                                                                                                                                                                                                                                                        37, 38, 39, 40, 41, 42, 42, 44, 45, 
+                                                                                                                                                                                                                                                                        46, 47, 48, 49, 50, 51, 52, 53, 54,
+                                                                                                                                                                                                                                                                        55, 56, 57, 58, 59, 60, 61, 62, 63,
+                                                                                                                                                                                                                                                                        64, 65, 66, 67, 68, 69, 70, 71, 72,
+                                                                                                                                                                                                                                                                        73, 74, 75, 76, 77, 78, 79, 80, 81), fill = c('#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', 
+                                                                                                                                                                                                                                                                                                                      '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', 
+                                                                                                                                                                                                                                                                                                                      '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', 
+                                                                                                                                                                                                                                                                                                                      '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', 
+                                                                                                                                                                                                                                                                                                                      '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', 
+                                                                                                                                                                                                                                                                                                                      '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000',
+                                                                                                                                                                                                                                                                                                                      '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d',
+                                                                                                                                                                                                                                                                                                                      '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000',
+                                                                                                                                                                                                                                                                                                                      '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d', '#FF8000', '#4d4d4d'))
+
+d4 <- d3 %>% 
+  mutate(fill = case_when(fill == '#FF8000' ~ '#fffaf0', TRUE ~ '#4d4d4d'))
 
 # 5 Mexico GP----
 # data https://www.statsf1.com/en/2023/mexico-city/tour-par-tour.aspx
@@ -119,6 +136,8 @@ d3 <- data.frame(x1 = c(1, 10, 20, 30, 40, 50, 60,
 # https://teamcolorcodes.com
 
 McLaren_colours_main <- c('#FF8000', '#00843D')
+McLaren_colours_blue <- '#47c7fc'
+McLaren_colours_papaya <- '#FF8000'
 
 # 5.2* Data----
 mexico_NOR_PIA <- read.csv('./00_raw_data/mexico_2023_NOR_PIA.csv') %>% 
@@ -150,7 +169,6 @@ mex_point_graph <- mexico_NOR_PIA %>%
         axis.ticks.x = element_blank(),
         axis.text.y = element_text(family = 'rubik', face = 'bold', colour = '#4d4d4d', size = 32),
         plot.title = element_markdown(size = 40, family = "alfa", face = "bold", hjust = 0.5),
-        plot.subtitle = element_markdown(size = 20, family = "alfa", face = "bold", hjust = 0.5),
         plot.caption = element_text(size = 20, family = "alfa",hjust = 0.5)) +
   labs(x = NULL,
        y = NULL,
@@ -158,7 +176,7 @@ mex_point_graph <- mexico_NOR_PIA %>%
        caption = "Data: statsF1.com. | Allan James (@allanjames1506)") +
   annotate(
     "text",
-    x = c(1,1),
+    x = c(1, 1),
     y = c(15, 5),
     label = c('LN4', 'OP81'),
     hjust = c(1, 1),
@@ -176,4 +194,54 @@ anim_mex <- mex_point_graph +
   transition_reveal(Lap) 
 
 anim_save("./04_gifs/first_saved_animation_anim_mex.gif", anim_mex, height = 600, width = 800)
+
+# 6 Lando's laps only----
+# 6.1* Static plot----
+
+mex_point_graph_lando <- mexico_NOR_PIA %>%
+  filter(driver == 'Lando') %>%
+  ggplot(aes(x = Lap, y = lap_position, size = lap_position, colour = driver, group = driver)) + 
+  geom_rect(data=d4, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=fill), inherit.aes = FALSE, alpha = 0.2) +
+  geom_step(size = 4) +
+  geom_point(shape=21, stroke = 4, fill = '#47c7fc') +
+  geom_text(aes(Lap, lap_position, label = as.character(lap_position), hjust = ifelse(lap_position > 10, -0.5, 0.5)), vjust = 0.5, size = 12, fontface = 'bold', family = 'rubik', colour = 'grey40') +
+  scale_colour_manual(values = McLaren_colours_papaya) +
+  scale_fill_identity() +
+  scale_size(range = c(40, 5)) +
+  coord_cartesian(xlim = c(-10, 80), ylim = c(19.5, 2), expand = F) +
+  theme_minimal() + 
+  theme(plot.margin = unit(c(20, 40, 20, 40), "pt"),
+        legend.position = "none",
+        panel.grid = element_blank(),
+        panel.background = element_rect(fill = "gray90", color = "transparent"),
+        plot.background = element_rect(fill = "gray90"),
+        text = element_text(color = '#4d4d4d'),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_blank(),
+        plot.caption = element_text(size = 16, family = "alfa",hjust = 0.5)) +
+  labs(x = NULL,
+       y = NULL,
+       title = NULL,
+       caption = "Data: statsF1.com. | Allan James (@allanjames1506)") +
+  annotate(
+    "text",
+    x = 1,
+    y = 15,
+    label = 'LN4',
+    hjust = 1,
+    vjust = 1,
+    size = 10,
+    colour = '#FF8000',
+    fontface = "bold",
+    family = "alfa"
+  )
+
+mex_point_graph_lando
+
+# 6.2* Animate----
+anim_mex_lando <- mex_point_graph_lando +
+  transition_reveal(Lap) 
+
+anim_save("./04_gifs/first_saved_animation_anim_mex_lando.gif", anim_mex_lando, height = 600, width = 800)
 
