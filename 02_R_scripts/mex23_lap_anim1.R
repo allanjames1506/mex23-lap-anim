@@ -19,8 +19,15 @@ library(png)
 library(magick)
 library(ggimage)
 library(ggfx)
-remotes::install_github("wilkelab/gridtext")
-remotes::install_github("lenkiefer/darklyplot")
+library(gridtext)
+library(darklyplot)
+library(showtext)
+library(purrr)
+library(countrycode)
+library(ggfun)
+#remotes::install_github("wilkelab/gridtext")
+#remotes::install_github("lenkiefer/darklyplot")
+devtools::install_github("rensa/ggflags")
 
 # 3 Fonts----
 # Loading Google fonts (https://fonts.google.com/)
@@ -34,6 +41,9 @@ font_add_google("Calistoga", "vegas")
 font_add_google("Rye", "rye")
 showtext_auto()
 showtext_opts(dpi = 320)
+
+sysfonts::font_add(family = "Font Awesome 6 Brands",
+                   regular = "./00_raw_data/fonts/otfs/Font Awesome 6 Brands-Regular-400.otf")
 
 # 4 (optional) Chequered flag----
 # 4.1* development----
@@ -645,7 +655,295 @@ anim_puggy2 <- puggy2 +
 
 anim_save("./04_gifs/first_saved_animation_anim_puggy2.gif", anim_puggy2, height = 600, width = 800)
 
+# 9 Constructors----
+# *9.1 Colours----
+
+constructors_colours_main <- c('#FF8000', '#00843D', '#FF8000', '#00843D', '#FF8000', '#00843D', '#FF8000', '#00843D', '#FF8000', '#00843D')
+
+# https://teamcolorcodes.com
+# https://www.reddit.com/r/formula1/comments/1avhmjb/f1_2024_hex_codes/
+# https://sportcolorcodes.com
+
+alpha_romeo_main <- '#a50f2d'
+alpha_romeo_secondary <- '#000e22'
+alpha_romeo_tertiary <- '#004e37'
+
+alpha_tauri_main <-'#5E8FAA'
+alpha_tauri_secondary <- '#fffff4'
+
+alpine_main <- '#FF87BC'
+alpine_secondary <- '#2173B8'
+alpine_tertiary <- '#02192B'
+'#FF87BC'
+
+aston_main <- '#229971'
+aston_secondary <- '#666769'
+'#229971'
+
+ferrari_main <- '#E8002D'
+ferrari_secondary <- '#FFF200'
+ferrari_tertiary <- '#000000'
+'#E8002D'
 
 
+haas_main <- '#B6BABD'
+haas_secondary <- '#E6002B' 
+'#B6BABD'
+
+kick_sauber_main <- '#52E252'
+kick_sauber_secondary <- '#000000'
+'#52E252'
+
+
+mclaren_main <- '#FF8000'
+mclaren_secondary <- '#fffff4'
+mclaren_tertiary <- '#000000'
+
+mercedes_primary <- '#27F4D2'
+mercedes_secondary <- '#565F64'
+mercedes_tertiary <- '#000000'
+'#27F4D2'
+
+rb_main <- '#6692FF'
+rb_secondary <- '#dd0740'
+
+red_bull_main <- '#3671C6'
+red_bull_secondary <- '#FF004C'
+red_bull_tertiary <- '#FFCC00'
+'#00174C'
+'#CCCCCC'
+'#003773'
+
+williams_main <- '#00A0DE'
+williams_secondary <- '#000000'
+'#00A0DE'
+
+# *9.2 Icons----
+
+# see blogpost https://nrennie.rbind.io/blog/adding-social-media-icons-ggplot2/
+# search for a fontawesome icon at https://fontawesome.com/icons
+# e.g., Threads icon
+# obtain unicode id, for Threads = e618
+# to use it in in HTML code add '&#x'
+
+threads_icon <- '&#xe618'
+threads_username <- 'Aljam'
+social_caption <- glue::glue(
+  "<span style='font-family:\"Font Awesome 6 Brands\";'>{threads_icon}; </span> {threads_username}"
+)
+
+# *9.3 Data 2024----
+
+constructors_2024 <- read.csv('./00_raw_data/constructors_2024.csv') %>% 
+  pivot_longer(cols = 'Alpine':'Williams', names_to = 'constructor', values_to = 'points') %>% 
+  mutate(main_colour = case_when(constructor == 'Alpine' ~ alpine_secondary,
+                                 constructor == 'Aston_Martin' ~ aston_secondary,
+                                 constructor == 'Ferrari' ~ ferrari_secondary,
+                                 constructor == 'Haas' ~ haas_secondary,
+                                 constructor == 'Kick_Sauber' ~ kick_sauber_secondary,
+                                 constructor == 'McLaren' ~ mclaren_secondary,
+                                 constructor == 'Mercedes' ~ mercedes_secondary,
+                                 constructor == 'RB' ~ rb_secondary,
+                                 constructor == 'Red_Bull' ~ red_bull_secondary,
+                                 constructor == 'Williams' ~ williams_secondary,
+                                 TRUE ~ NA),
+         secondary_colour = case_when(constructor == 'Alpine' ~ alpine_main,
+                                      constructor == 'Aston_Martin' ~ aston_main,
+                                      constructor == 'Ferrari' ~ ferrari_main,
+                                      constructor == 'Haas' ~ haas_main,
+                                      constructor == 'Kick_Sauber' ~ kick_sauber_main,
+                                      constructor == 'McLaren' ~ mclaren_main,
+                                      constructor == 'Mercedes' ~ mercedes_primary,
+                                      constructor == 'RB' ~ rb_main,
+                                      constructor == 'Red_Bull' ~ red_bull_main,
+                                      constructor == 'Williams' ~ williams_main,
+                                      TRUE ~ NA),
+         point_size = case_when(between(points, 0, 10) ~ 1,
+                                between(points, 10, 100) ~ 2,
+                                between(points, 100, 200) ~ 3,
+                                between(points, 200, 300) ~ 6,
+                                between(points, 300, 500) ~ 8,
+                                between(points, 500, 1000) ~ 12,
+                                TRUE ~ NA),
+         stroke_size = case_when(between(points, 0, 10) ~ 0.5,
+                                 between(points, 10, 100) ~ 1,
+                                 between(points, 100, 200) ~ 1.5,
+                                 between(points, 200, 300) ~ 3,
+                                 between(points, 300, 500) ~ 4,
+                                 between(points, 500, 1000) ~ 5.5,
+                                 TRUE ~ NA),
+         points_constructor = paste(points, constructor, sep = '-'),
+         constructor = case_when(constructor == 'Red_Bull' ~ 'Red Bull',
+                                 constructor == 'Aston_Martin' ~ 'Aston Martin',
+                                 TRUE ~ constructor),
+         year = 2024)
+
+country_two_letters <- countrycode(constructors_2024$Country,
+                                   origin = "country.name",
+                                   destination = "genc2c") %>% 
+  tolower() %>% 
+  set_names(constructors_2024$Country)
+
+constructors_2024 <- constructors_2024 %>% 
+  mutate(race_two_letters = country_two_letters[Country])
+
+constructors_2024 <- constructors_2024 %>% 
+  mutate(constructor = factor(constructor, levels = unique(constructor)))
+
+#levels(constructors_2024$constructor)
+
+# *9.4 Static plot 2024----
+
+constructors_point_graph <- constructors_2024 %>%
+  ggplot(aes(x = Race_id, y = points, colour = constructor, group = constructor)) + 
+  geom_point(shape=21, stroke = constructors_2024$stroke_size, fill = constructors_2024$main_colour, size = constructors_2024$point_size, aes(group = seq_along(Race_id))) +
+  scale_colour_manual(values = constructors_2024$secondary_colour) +
+  coord_cartesian(xlim = c(-3, 23), ylim = c(-20, 630), expand = F, clip = 'off') +
+  geom_flag(y = ifelse(constructors_2024$Race_id %% 2 == 0, 600, 620), aes(country = race_two_letters, group = seq_along(Race_id)), size = 12) +
+  geom_text(aes(Race_id , y = 570, label = as.character(Race_id)),
+            hjust = 0.5, size = 12, fontface = 'bold', col = "grey90", family = 'alfa') +
+  geom_text(aes(Race_id, points, label = as.character(points), hjust = -0.5), data = . %>%
+              filter(Race_id == 18 & points > 300), vjust = 0.5, size = 7, fontface = 'bold', family = 'alfa', colour = '#47c7fc') +
+  geom_label(aes(Race_id, points, label = constructor), data = . %>%
+              filter(Race_id == 18 & points > 300), label.size  = 1.5, family = 'alfa', colour = c('#E8002D', '#fffff4', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#FF8000', '#565F64', '#3671C6'), nudge_x = 3.2, nudge_y = 18) +
+  darklyplot::theme_dark2() +
+  theme(legend.position = "none",
+        plot.margin = unit(c(50, 20, 20, 20), "pt"),
+        panel.grid = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_text(family = 'alfa', face = 'bold', colour = '#47c7fc', size = 28, margin = margin(0,0,0,30)),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_text(size = 28, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#47c7fc')) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500)) +
+  annotate(
+    "text",
+    x = c(-5, -5),
+    y = c(550, 580),
+    label = c('points', 'race'),
+    hjust = c(0, 0),
+    vjust = c(1, 1),
+    size = c(10, 10),
+    colour = c('#47c7fc', "grey90"),
+    fontface = c("bold", "bold"),
+    family = c("alfa", "alfa")) +
+  labs(title = "The 2024 Constructors Race") +
+  transition_reveal(Race_id) 
+
+
+# *9.4 Animate 2024----
+
+animate(constructors_point_graph, nframes = 300, end_pause = 100, height = 800, width = 555)
+
+anim_save("./04_gifs/anim_constructors_2024.gif")
+
+# *9.5 Data 2023----
+
+constructors_2023 <- read.csv('./00_raw_data/constructors_2023.csv') %>% 
+  pivot_longer(cols = 'Alpine':'Williams', names_to = 'constructor', values_to = 'points') %>% 
+  mutate(main_colour = case_when(constructor == 'Alpine' ~ alpine_secondary,
+                                 constructor == 'Aston_Martin' ~ aston_secondary,
+                                 constructor == 'Ferrari' ~ ferrari_secondary,
+                                 constructor == 'Haas' ~ haas_secondary,
+                                 constructor == 'Alpha_Romeo_Ferrari' ~ alpha_romeo_tertiary,
+                                 constructor == 'McLaren' ~ mclaren_secondary,
+                                 constructor == 'Mercedes' ~ mercedes_secondary,
+                                 constructor == 'Scuderia_AlphaTauri' ~ alpha_tauri_secondary,
+                                 constructor == 'Red_Bull' ~ red_bull_secondary,
+                                 constructor == 'Williams' ~ williams_secondary,
+                                 TRUE ~ NA),
+         secondary_colour = case_when(constructor == 'Alpine' ~ alpine_main,
+                                      constructor == 'Aston_Martin' ~ aston_main,
+                                      constructor == 'Ferrari' ~ ferrari_main,
+                                      constructor == 'Haas' ~ haas_main,
+                                      constructor == 'Alpha_Romeo_Ferrari' ~ alpha_romeo_main,
+                                      constructor == 'McLaren' ~ mclaren_main,
+                                      constructor == 'Mercedes' ~ mercedes_primary,
+                                      constructor == 'Scuderia_AlphaTauri' ~ alpha_tauri_main,
+                                      constructor == 'Red_Bull' ~ red_bull_main,
+                                      constructor == 'Williams' ~ williams_main,
+                                      TRUE ~ NA),
+         point_size = case_when(between(points, 0, 10) ~ 1,
+                                between(points, 10, 100) ~ 2,
+                                between(points, 100, 200) ~ 3,
+                                between(points, 200, 300) ~ 6,
+                                between(points, 300, 500) ~ 8,
+                                between(points, 500, 1000) ~ 12,
+                                TRUE ~ NA),
+         stroke_size = case_when(between(points, 0, 10) ~ 0.5,
+                                 between(points, 10, 100) ~ 1,
+                                 between(points, 100, 200) ~ 1.5,
+                                 between(points, 200, 300) ~ 3,
+                                 between(points, 300, 500) ~ 4,
+                                 between(points, 500, 1000) ~ 5.5,
+                                 TRUE ~ NA),
+         points_constructor = paste(points, constructor, sep = '-'),
+         constructor = case_when(constructor == 'Red_Bull' ~ 'Red Bull',
+                                 constructor == 'Aston_Martin' ~ 'Aston Martin',
+                                 TRUE ~ constructor),
+         year = 2023)
+
+country_two_letters_2023 <- countrycode(constructors_2023$Country,
+                                        origin = "country.name",
+                                        destination = "genc2c") %>% 
+  tolower() %>% 
+  set_names(constructors_2023$Country)
+
+constructors_2023 <- constructors_2023 %>% 
+  mutate(race_two_letters = country_two_letters[Country])
+
+constructors_2023 <- constructors_2023 %>% 
+  mutate(race_two_letters = case_when(Race %in% 'Qatar' ~ 'qa', TRUE ~ race_two_letters),
+         constructor = factor(constructor, levels = unique(constructor)))
+
+# *9.6 Static plot 2023----
+
+constructors_point_graph_2023 <- constructors_2023 %>%
+  ggplot(aes(x = Race_id, y = points, colour = constructor, group = constructor)) + 
+  geom_point(shape=21, stroke = constructors_2023$stroke_size, fill = constructors_2023$main_colour, size = constructors_2023$point_size, aes(group = seq_along(Race_id))) +
+  scale_colour_manual(values = constructors_2023$secondary_colour) +
+  coord_cartesian(xlim = c(-3, 23), ylim = c(-20, 850), expand = F, clip = 'off') +
+  geom_flag(y = ifelse(constructors_2023$Race_id %% 2 == 0, 820, 840), aes(country = race_two_letters, group = seq_along(Race_id)), size = 11.5) +
+  geom_text(aes(Race_id , y = 770, label = as.character(Race_id)),
+            hjust = 0.5, size = 12, fontface = 'bold', col = "grey90", family = 'alfa') +
+  geom_text(aes(Race_id, points, label = as.character(points)), data = . %>%
+              filter(Race_id == 18 & points > 300), vjust = c(1, -2, 1), hjust = c(-0.5, 0, -0.5), size = 7, fontface = 'bold', family = 'alfa', colour = '#52E252') +
+  geom_label(aes(Race_id, points, label = constructor), data = . %>%
+               filter(Race_id == 18 & points > 300), label.size  = 1.5, family = 'alfa', colour = c('#E8002D', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#565F64', '#3671C6'), nudge_x = 3.2, nudge_y = 18) +
+  darklyplot::theme_dark2() +
+  theme(legend.position = "none",
+        plot.margin = unit(c(50, 20, 20, 20), "pt"),
+        panel.grid = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_text(family = 'alfa', face = 'bold', colour = '#52E252', size = 28, margin = margin(0,0,0,30)),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_text(size = 28, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#52E252')) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600, 700)) +
+  annotate(
+    "text",
+    x = c(-5, -5),
+    y = c(750, 780),
+    label = c('points', 'race'),
+    hjust = c(0, 0),
+    vjust = c(1, 1),
+    size = c(10, 10),
+    colour = c('#52E252', "grey90"),
+    fontface = c("bold", "bold"),
+    family = c("alfa", "alfa")) +
+  labs(title = "The 2023 Constructors Race") +
+  transition_reveal(Race_id) 
+
+# *9.7 Animate 2023----
+
+animate(constructors_point_graph_2023, nframes = 300, end_pause = 100, height = 800, width = 600)
+
+anim_save("./04_gifs/anim_constructors_2023.gif")
 
 
