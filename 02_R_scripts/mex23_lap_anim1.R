@@ -698,6 +698,7 @@ kick_sauber_secondary <- '#000000'
 mclaren_main <- '#FF8000'
 mclaren_secondary <- '#fffff4'
 mclaren_tertiary <- '#000000'
+mclaren_other <- '#4d4d4d'
 
 mercedes_primary <- '#27F4D2'
 mercedes_secondary <- '#565F64'
@@ -945,5 +946,272 @@ constructors_point_graph_2023 <- constructors_2023 %>%
 animate(constructors_point_graph_2023, nframes = 300, end_pause = 100, height = 800, width = 600)
 
 anim_save("./04_gifs/anim_constructors_2023.gif")
+
+# 10 Drivers----
+# *10.1 Data 2024----
+
+drivers_2024 <- read.csv('./00_raw_data/drivers_2024.csv') %>% 
+  pivot_longer(cols = 'Albon':'Zhou', names_to = 'driver', values_to = 'points') %>% 
+  mutate(main_colour = case_when(driver == 'Gasly' ~ alpine_secondary,
+                                 driver == 'Ocon' ~ alpine_secondary,
+                                 driver == 'Alonso' ~ aston_secondary,
+                                 driver == 'Stroll' ~ aston_secondary,
+                                 driver == 'Leclerc' ~ ferrari_main,
+                                 driver == 'Sainz' ~ ferrari_main,
+                                 driver == 'Hulkenberg' ~ haas_secondary,
+                                 driver == 'Magnussen' ~ haas_secondary,
+                                 driver == 'Bottas' ~ kick_sauber_secondary,
+                                 driver == 'Zhou' ~ kick_sauber_secondary,
+                                 driver == 'Norris' ~ mclaren_other,
+                                 driver == 'Piastri' ~ mclaren_other,
+                                 driver == 'Hamilton' ~ mercedes_secondary,
+                                 driver == 'Russell' ~ mercedes_secondary,
+                                 driver == 'Ricciardo' ~ rb_secondary,
+                                 driver == 'Tsunoda' ~ rb_secondary,
+                                 driver == 'Verstappen' ~ red_bull_secondary,
+                                 driver == 'Perez' ~ red_bull_secondary,
+                                 driver == 'Albon' ~ williams_secondary,
+                                 driver == 'Sargeant' ~ williams_secondary,
+                                 TRUE ~ NA),
+         secondary_colour = case_when(driver == 'Gasly' ~ alpine_main,
+                                      driver == 'Ocon' ~ alpine_main,
+                                      driver == 'Alonso' ~ aston_main,
+                                      driver == 'Stroll' ~ aston_main,
+                                      driver == 'Leclerc' ~ ferrari_secondary,
+                                      driver == 'Sainz' ~ ferrari_secondary,
+                                      driver == 'Hulkenberg' ~ haas_main,
+                                      driver == 'Magnussen' ~ haas_main,
+                                      driver == 'Bottas' ~ kick_sauber_main,
+                                      driver == 'Zhou' ~ kick_sauber_main,
+                                      driver == 'Norris' ~ mclaren_main,
+                                      driver == 'Piastri' ~ mclaren_main,
+                                      driver == 'Hamilton' ~ mercedes_primary,
+                                      driver == 'Russell' ~ mercedes_primary,
+                                      driver == 'Ricciardo' ~ rb_main,
+                                      driver == 'Tsunoda' ~ rb_main,
+                                      driver == 'Verstappen' ~ red_bull_main,
+                                      driver == 'Perez' ~ red_bull_main,
+                                      driver == 'Albon' ~ williams_main,
+                                      driver == 'Sargeant' ~ williams_main,
+                                      TRUE ~ NA),
+         point_size = case_when(between(points, 0, 10) ~ 0.5,
+                                between(points, 10, 50) ~ 1,
+                                between(points, 50, 100) ~ 1.5,
+                                between(points, 100, 150) ~ 3,
+                                between(points, 150, 200) ~ 4,
+                                between(points, 200, 250) ~ 5,
+                                between(points, 250, 500) ~ 6,
+                                TRUE ~ NA),
+         stroke_size = case_when(between(points, 0, 10) ~ 0.5,
+                                 between(points, 10, 50) ~ 1,
+                                 between(points, 50, 100) ~ 1.5,
+                                 between(points, 100, 150) ~ 3,
+                                 between(points, 150, 200) ~ 4,
+                                 between(points, 200, 250) ~ 5,
+                                 between(points, 250, 500) ~ 6,
+                                 TRUE ~ NA),
+         points_driver = paste(points, driver, sep = '-'),
+         year = 2024)
+
+country_two_letters <- countrycode(drivers_2024$Country,
+                                   origin = "country.name",
+                                   destination = "genc2c") %>% 
+  tolower() %>% 
+  set_names(drivers_2024$Country)
+
+drivers_2024 <- drivers_2024 %>% 
+  mutate(race_two_letters = country_two_letters[Country])
+
+drivers_2024 <- drivers_2024 %>% 
+  mutate(driver = factor(driver, levels = unique(driver)))
+
+# *10.2 Static plot 2024----
+drivers_2024 <- drivers_2024 %>% 
+  filter(driver %in% c('Verstappen', 'Norris', 'Leclerc', 'Piastri'))
+
+drivers_point_graph <- drivers_2024 %>%
+  #filter(driver %in% c('Verstappen', 'Norris', 'Leclerc', 'Piastri')) %>% 
+  ggplot(aes(x = Race_id, y = points, colour = driver, group = driver)) + 
+  geom_point(shape=21, stroke = drivers_2024$stroke_size, fill = drivers_2024$main_colour, size = drivers_2024$point_size, aes(group = seq_along(Race_id))) +
+  scale_colour_manual(values = drivers_2024$secondary_colour) +
+  coord_cartesian(xlim = c(-3, 25), ylim = c(-20, 430), expand = F, clip = 'off') +
+  geom_flag(y = ifelse(drivers_2024$Race_id %% 2 == 0, 400, 420), aes(country = race_two_letters, group = seq_along(Race_id)), size = 12) +
+  geom_text(aes(Race_id , y = 370, label = as.character(Race_id)),
+            hjust = 0.5, size = 12, fontface = 'bold', col = "grey90", family = 'alfa') +
+  # geom_text(aes(Race_id, points, label = as.character(points)), data = . %>%
+  #             filter(Race_id == 18 & points > 200), vjust = c('top', 'top', 'bottom', 'top'), hjust = c(-0.5, 0, -0.5, 0), family = 'alfa', colour = '#00843D') +
+  ggrepel::geom_text_repel(aes(Race_id, points, label = as.character(points)), data = . %>%
+                             filter(Race_id == 18 & points > 200), family = 'alfa', colour = '#00843D', hjust='right', xlim = 23, size = 6) +
+  ggrepel::geom_label_repel(aes(Race_id, points, label = driver), data = . %>%
+               filter(Race_id == 18 & points > 200), size = 6, label.size  = 0.5, family = 'alfa', colour = c('#E8002D', '#FF8000', '#FF8000',  '#FF004C'), fill = c('#FFF200', '#4d4d4d', '#4d4d4d', '#3671C6'), position = position_dodge(), direction = 'y', hjust='right', xlim = 22.5) +
+  darklyplot::theme_dark2() +
+  theme(legend.position = "none",
+        plot.margin = unit(c(60, 20, 20, 20), "pt"),
+        panel.grid = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_text(family = 'alfa', face = 'bold', colour = '#00843D', size = 28, margin = margin(0,0,0,30)),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_text(size = 24, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#00843D'),
+        plot.caption = element_text(size = 16, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#B6BABD')) +
+  scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250, 300)) +
+  annotate(
+    "text",
+    x = c(-5, -5),
+    y = c(350, 375),
+    label = c('points', 'race'),
+    hjust = c(0, 0),
+    vjust = c(1, 1),
+    size = c(10, 10),
+    colour = c('#00843D', "grey90"),
+    fontface = c("bold", "bold"),
+    family = c("alfa", "alfa")) +
+  labs(title = "F1: The 2024 Drivers Championship",
+       caption = "design by hey-jay") +
+  transition_reveal(Race_id) 
+
+# *10.3 Animate 2024----
+
+animate(drivers_point_graph, nframes = 300, end_pause = 100, height = 800, width = 555)
+
+anim_save("./04_gifs/anim_drivers_2024.gif")
+
+# *10.4 Data 2023----
+
+drivers_2023 <- read.csv('./00_raw_data/drivers_2023.csv') %>% 
+  pivot_longer(cols = 'Albon':'Zhou', names_to = 'driver', values_to = 'points') %>% 
+  mutate(main_colour = case_when(driver == 'Gasly' ~ alpine_secondary,
+                                 driver == 'Ocon' ~ alpine_secondary,
+                                 driver == 'Alonso' ~ aston_secondary,
+                                 driver == 'Stroll' ~ aston_secondary,
+                                 driver == 'Leclerc' ~ ferrari_main,
+                                 driver == 'Sainz' ~ ferrari_main,
+                                 driver == 'Hulkenberg' ~ haas_secondary,
+                                 driver == 'Magnussen' ~ haas_secondary,
+                                 driver == 'Bottas' ~ kick_sauber_secondary,
+                                 driver == 'Zhou' ~ kick_sauber_secondary,
+                                 driver == 'Norris' ~ mclaren_other,
+                                 driver == 'Piastri' ~ mclaren_other,
+                                 driver == 'Hamilton' ~ mercedes_secondary,
+                                 driver == 'Russell' ~ mercedes_secondary,
+                                 driver == 'Ricciardo' ~ rb_secondary,
+                                 driver == 'Tsunoda' ~ rb_secondary,
+                                 driver == 'Verstappen' ~ red_bull_secondary,
+                                 driver == 'Perez' ~ red_bull_secondary,
+                                 driver == 'Albon' ~ williams_secondary,
+                                 driver == 'Sargeant' ~ williams_secondary,
+                                 TRUE ~ NA),
+         secondary_colour = case_when(driver == 'Gasly' ~ alpine_main,
+                                      driver == 'Ocon' ~ alpine_main,
+                                      driver == 'Alonso' ~ aston_main,
+                                      driver == 'Stroll' ~ aston_main,
+                                      driver == 'Leclerc' ~ ferrari_secondary,
+                                      driver == 'Sainz' ~ ferrari_secondary,
+                                      driver == 'Hulkenberg' ~ haas_main,
+                                      driver == 'Magnussen' ~ haas_main,
+                                      driver == 'Bottas' ~ kick_sauber_main,
+                                      driver == 'Zhou' ~ kick_sauber_main,
+                                      driver == 'Norris' ~ mclaren_main,
+                                      driver == 'Piastri' ~ mclaren_main,
+                                      driver == 'Hamilton' ~ mercedes_primary,
+                                      driver == 'Russell' ~ mercedes_primary,
+                                      driver == 'Ricciardo' ~ rb_main,
+                                      driver == 'Tsunoda' ~ rb_main,
+                                      driver == 'Verstappen' ~ red_bull_main,
+                                      driver == 'Perez' ~ red_bull_main,
+                                      driver == 'Albon' ~ williams_main,
+                                      driver == 'Sargeant' ~ williams_main,
+                                      TRUE ~ NA),
+         point_size = case_when(between(points, 0, 10) ~ 0.5,
+                                between(points, 10, 50) ~ 1,
+                                between(points, 50, 100) ~ 1.5,
+                                between(points, 100, 150) ~ 3,
+                                between(points, 150, 200) ~ 4,
+                                between(points, 200, 250) ~ 5,
+                                between(points, 250, 500) ~ 6,
+                                TRUE ~ NA),
+         stroke_size = case_when(between(points, 0, 10) ~ 0.5,
+                                 between(points, 10, 50) ~ 1,
+                                 between(points, 50, 100) ~ 1.5,
+                                 between(points, 100, 150) ~ 3,
+                                 between(points, 150, 200) ~ 4,
+                                 between(points, 200, 250) ~ 5,
+                                 between(points, 250, 500) ~ 6,
+                                 TRUE ~ NA),
+         points_driver = paste(points, driver, sep = '-'),
+         year = 2023)
+
+country_two_letters <- countrycode(drivers_2023$Country,
+                                   origin = "country.name",
+                                   destination = "genc2c") %>% 
+  tolower() %>% 
+  set_names(drivers_2023$Country)
+
+drivers_2023 <- drivers_2023 %>% 
+  mutate(race_two_letters = country_two_letters[Country])
+
+drivers_2023 <- drivers_2023 %>% 
+  mutate(race_two_letters = case_when(Race %in% 'Qatar' ~ 'qa', TRUE ~ race_two_letters),
+         driver = factor(driver, levels = unique(driver)))
+
+# *10.5 Static plot 2023----
+drivers_2023 <- drivers_2023 %>% 
+  filter(driver %in% c('Verstappen', 'Perez', 'Hamilton', 'Alonso'))
+
+drivers_point_graph_2023 <- drivers_2023 %>%
+  #filter(driver %in% c('Verstappen', 'Norris', 'Leclerc', 'Piastri')) %>% 
+  ggplot(aes(x = Race_id, y = points, colour = driver, group = driver)) + 
+  geom_point(shape=21, stroke = drivers_2023$stroke_size, fill = drivers_2023$main_colour, size = drivers_2023$point_size, aes(group = seq_along(Race_id))) +
+  scale_colour_manual(values = drivers_2023$secondary_colour) +
+  coord_cartesian(xlim = c(-3, 25.5), ylim = c(-20, 630), expand = F, clip = 'off') +
+  geom_flag(y = ifelse(drivers_2024$Race_id %% 2 == 0, 600, 620), aes(country = race_two_letters, group = seq_along(Race_id)), size = 12) +
+  geom_text(aes(Race_id , y = 570, label = as.character(Race_id)),
+            hjust = 0.5, size = 12, fontface = 'bold', col = "grey90", family = 'alfa') +
+  # geom_text(aes(Race_id, points, label = as.character(points)), data = . %>%
+  #             filter(Race_id == 18 & points > 200), vjust = c('top', 'top', 'bottom', 'top'), hjust = c(-0.5, 0, -0.5, 0), family = 'alfa', colour = '#00843D') +
+  ggrepel::geom_text_repel(aes(Race_id, points, label = as.character(points)), data = . %>%
+                             filter(Race_id == 18 & points > 180), family = 'alfa', colour = '#FF87BC', hjust='right', xlim = 24.5, size = 6) +
+  ggrepel::geom_label_repel(aes(Race_id, points, label = driver), data = . %>%
+                              filter(Race_id == 18 & points > 180), size = 6, label.size  = 0.5, family = 'alfa', colour = c('#229971', '#565F64', '#FF004C',  '#FF004C'), fill = c('grey90', '#27F4D2', '#3671C6', '#3671C6'), position = position_dodge(), direction = 'y', hjust='right', xlim = 24) +
+  darklyplot::theme_dark2() +
+  theme(legend.position = "none",
+        plot.margin = unit(c(60, 30, 20, 20), "pt"),
+        panel.grid = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_text(family = 'alfa', face = 'bold', colour = '#FF87BC', size = 28, margin = margin(0,0,0,30)),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_text(size = 24, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#FF87BC'),
+        plot.caption = element_text(size = 16, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#B6BABD')) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400)) +
+  annotate(
+    "text",
+    x = c(-5, -5),
+    y = c(550, 575),
+    label = c('points', 'race'),
+    hjust = c(0, 0),
+    vjust = c(1, 1),
+    size = c(10, 10),
+    colour = c('#FF87BC', "grey90"),
+    fontface = c("bold", "bold"),
+    family = c("alfa", "alfa")) +
+  labs(title = "F1: The 2023 Drivers Championship",
+       caption = "design by hey-jay") +
+  transition_reveal(Race_id) 
+
+# *10.6 Animate 2023----
+
+animate(drivers_point_graph_2023, nframes = 300, end_pause = 100, height = 800, width = 555)
+
+anim_save("./04_gifs/anim_drivers_2023.gif")
+
+
+
 
 
