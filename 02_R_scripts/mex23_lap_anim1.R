@@ -242,10 +242,14 @@ mex_point_graph <- mexico_NOR_PIA %>%
         axis.text.y = element_text(family = 'rubik', face = 'bold', colour = '#4d4d4d', size = 32),
         plot.title = element_markdown(size = 40, family = "alfa", face = "bold", hjust = 0.5),
         plot.caption = element_text(size = 20, family = "alfa",hjust = 0.5)) +
+  # labs(x = NULL,
+  #      y = NULL,
+  #      title = "<span style = 'color:#006341'>Mexico </span><span style = 'color:#FFFFFF'> Grand </span><span style = 'color:#C8102E'>Prix </span>",
+  #      caption = "Data: statsF1.com. | Allan James (@allanjames1506)") +
   labs(x = NULL,
        y = NULL,
        title = "<span style = 'color:#006341'>Mexico </span><span style = 'color:#FFFFFF'> Grand </span><span style = 'color:#C8102E'>Prix </span>",
-       caption = "Data: statsF1.com. | Allan James (@allanjames1506)") +
+       caption = "Design by hey-jay") +
   annotate(
     "text",
     x = c(1, 1),
@@ -257,15 +261,18 @@ mex_point_graph <- mexico_NOR_PIA %>%
     colour = c('#FF8000', '#00843D'),
     fontface = "bold",
     family = "alfa"
-  )
+  ) +
+  transition_reveal(Lap)
 
-mex_point_graph
 
 # 5.4* Animate----
-anim_mex <- mex_point_graph +
-  transition_reveal(Lap) 
 
-anim_save("./04_gifs/second_saved_animation_anim_mex.gif", anim_mex, height = 600, width = 800)
+animate(mex_point_graph, nframes = 300, end_pause = 100, height = 600, width = 800)
+
+# anim_mex <- mex_point_graph +
+#   transition_reveal(Lap) 
+
+anim_save("./04_gifs/second_saved_animation_anim_mex_2024.gif")
 
 # 6 Lando's laps only Mexico----
 # 6.1* Static plot----
