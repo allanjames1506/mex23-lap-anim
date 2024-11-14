@@ -1231,12 +1231,13 @@ road_sign_2024 <- read.csv('./00_raw_data/constructors_2024.csv') %>%
   ungroup() %>% 
   mutate(constructor = case_when(constructor == 'Red_Bull' ~ 'Redbull',
                                  constructor == 'McLaren' ~ 'Mclaren',
+                                 constructor == 'Ferrari' ~ 'Ferrari',
                                  TRUE ~ constructor)) %>% 
   mutate(constructor = factor(constructor, levels = c('Redbull', 'Ferrari', 'Mclaren')))
 
 constructors_order <- c('Mclaren', 'Ferrari', 'Redbull')
 text_colours <- c('white', 'white', 'white')
-mway <- '( F1 South )'
+mway <- '( F1 World )'
 caption <- 'hey-jay'
 
 road_sign_animate_simple <- road_sign_2024 %>%
@@ -1263,6 +1264,6 @@ road_sign_animate_simple <- road_sign_2024 %>%
   #scale_y_reverse() +
   transition_reveal(Race_id) 
 
-animate(road_sign_animate_simple, nframes = 300, end_pause = 100, height = 555, width = 800)
+animate(road_sign_animate_simple, nframes = 250, end_pause = 100, height = 555, width = 800)
 
-anim_save("./04_gifs/road_sign_test_2024_roboto.gif")
+anim_save("./04_gifs/road_sign_test_2024_roboto_v3.gif")
