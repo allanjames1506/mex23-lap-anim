@@ -684,26 +684,19 @@ alpha_tauri_secondary <- '#fffff4'
 alpine_main <- '#FF87BC'
 alpine_secondary <- '#2173B8'
 alpine_tertiary <- '#02192B'
-'#FF87BC'
 
 aston_main <- '#229971'
 aston_secondary <- '#666769'
-'#229971'
 
 ferrari_main <- '#E8002D'
 ferrari_secondary <- '#FFF200'
 ferrari_tertiary <- '#000000'
-'#E8002D'
-
 
 haas_main <- '#B6BABD'
 haas_secondary <- '#E6002B' 
-'#B6BABD'
 
 kick_sauber_main <- '#52E252'
 kick_sauber_secondary <- '#000000'
-'#52E252'
-
 
 mclaren_main <- '#FF8000'
 mclaren_secondary <- '#fffff4'
@@ -713,7 +706,6 @@ mclaren_other <- '#4d4d4d'
 mercedes_primary <- '#27F4D2'
 mercedes_secondary <- '#565F64'
 mercedes_tertiary <- '#000000'
-'#27F4D2'
 
 rb_main <- '#6692FF'
 rb_secondary <- '#dd0740'
@@ -721,13 +713,10 @@ rb_secondary <- '#dd0740'
 red_bull_main <- '#3671C6'
 red_bull_secondary <- '#FF004C'
 red_bull_tertiary <- '#FFCC00'
-'#00174C'
-'#CCCCCC'
-'#003773'
 
 williams_main <- '#00A0DE'
 williams_secondary <- '#000000'
-'#00A0DE'
+
 
 # *9.2 Icons----
 
@@ -809,14 +798,18 @@ constructors_point_graph <- constructors_2024 %>%
   ggplot(aes(x = Race_id, y = points, colour = constructor, group = constructor)) + 
   geom_point(shape=21, stroke = constructors_2024$stroke_size, fill = constructors_2024$main_colour, size = constructors_2024$point_size, aes(group = seq_along(Race_id))) +
   scale_colour_manual(values = constructors_2024$secondary_colour) +
-  coord_cartesian(xlim = c(-3, 23), ylim = c(-20, 630), expand = F, clip = 'off') +
-  geom_flag(y = ifelse(constructors_2024$Race_id %% 2 == 0, 600, 620), aes(country = race_two_letters, group = seq_along(Race_id)), size = 12) +
-  geom_text(aes(Race_id , y = 570, label = as.character(Race_id)),
+  coord_cartesian(xlim = c(-3, 29), ylim = c(-20, 730), expand = F, clip = 'off') +
+  geom_flag(y = ifelse(constructors_2024$Race_id %% 2 == 0, 695, 720), aes(country = race_two_letters, group = seq_along(Race_id)), size = 12) +
+  geom_text(aes(Race_id , y = 665, label = as.character(Race_id)),
             hjust = 0.5, size = 12, fontface = 'bold', col = "grey90", family = 'alfa') +
-  geom_text(aes(Race_id, points, label = as.character(points), hjust = -0.5), data = . %>%
-              filter(Race_id == 18 & points > 300), vjust = 0.5, size = 7, fontface = 'bold', family = 'alfa', colour = '#47c7fc') +
-  geom_label(aes(Race_id, points, label = constructor), data = . %>%
-              filter(Race_id == 18 & points > 300), label.size  = 1.5, family = 'alfa', colour = c('#E8002D', '#fffff4', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#FF8000', '#565F64', '#3671C6'), nudge_x = 3.2, nudge_y = 18) +
+  ggrepel::geom_text_repel(aes(Race_id, points, label = as.character(points)), data = . %>%
+                             filter(Race_id == 21 & points > 300), family = 'alfa', colour = '#47c7fc', hjust='right', xlim = 27, size = 6) +
+  ggrepel::geom_label_repel(aes(Race_id, points, label = constructor), data = . %>%
+                              filter(Race_id == 21 & points > 300), size = 6, label.size  = 0.5, family = 'alfa', colour = c('#E8002D', '#fffff4', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#FF8000', '#565F64', '#3671C6'), position = position_dodge(width = 0.95), direction = 'y', hjust='right', xlim = 26.5) +
+  # ggrepel::geom_text_repel(aes(Race_id, points, label = as.character(points)), data = . %>%
+  #                            filter(Race_id == 18 & points > 300), family = 'alfa', colour = '#52E252', hjust='right', xlim = 24.5, size = 6) +
+  # ggrepel::geom_label_repel(aes(Race_id, points, label = constructor), data = . %>%
+  #                             filter(Race_id == 18 & points > 300), size = 6, label.size  = 0.5, family = 'alfa', colour = c('#E8002D', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#565F64', '#3671C6'), position = position_dodge(), direction = 'y', hjust='right', xlim = 24) +
   darklyplot::theme_dark2() +
   theme(legend.position = "none",
         plot.margin = unit(c(50, 20, 20, 20), "pt"),
@@ -829,11 +822,11 @@ constructors_point_graph <- constructors_2024 %>%
         axis.title.y = element_blank(),
         axis.title.x = element_blank(),
         plot.title = element_text(size = 28, family = "alfa", face = "bold", hjust = 0.5, vjust = -0.8, colour = '#47c7fc')) +
-  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500)) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600)) +
   annotate(
     "text",
     x = c(-5, -5),
-    y = c(550, 580),
+    y = c(645, 670),
     label = c('points', 'race'),
     hjust = c(0, 0),
     vjust = c(1, 1),
@@ -847,9 +840,9 @@ constructors_point_graph <- constructors_2024 %>%
 
 # *9.4 Animate 2024----
 
-animate(constructors_point_graph, nframes = 300, end_pause = 100, height = 800, width = 555)
+animate(constructors_point_graph, nframes = 200, end_pause = 50, height = 900, width = 600)
 
-anim_save("./04_gifs/anim_constructors_2024.gif")
+anim_save("./04_gifs/anim_constructors_2024_21_races.gif")
 
 # *9.5 Data 2023----
 
@@ -920,10 +913,14 @@ constructors_point_graph_2023 <- constructors_2023 %>%
   geom_flag(y = ifelse(constructors_2023$Race_id %% 2 == 0, 820, 840), aes(country = race_two_letters, group = seq_along(Race_id)), size = 11.5) +
   geom_text(aes(Race_id , y = 770, label = as.character(Race_id)),
             hjust = 0.5, size = 12, fontface = 'bold', col = "grey90", family = 'alfa') +
-  geom_text(aes(Race_id, points, label = as.character(points)), data = . %>%
-              filter(Race_id == 18 & points > 300), vjust = c(1, -2, 1), hjust = c(-0.5, 0, -0.5), size = 7, fontface = 'bold', family = 'alfa', colour = '#52E252') +
-  geom_label(aes(Race_id, points, label = constructor), data = . %>%
-               filter(Race_id == 18 & points > 300), label.size  = 1.5, family = 'alfa', colour = c('#E8002D', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#565F64', '#3671C6'), nudge_x = 3.2, nudge_y = 18) +
+  ggrepel::geom_text_repel(aes(Race_id, points, label = as.character(points)), data = . %>%
+                             filter(Race_id == 18 & points > 300), family = 'alfa', colour = '#52E252', hjust='right', xlim = 24.5, size = 6) +
+  ggrepel::geom_label_repel(aes(Race_id, points, label = constructor), data = . %>%
+                              filter(Race_id == 18 & points > 300), size = 6, label.size  = 0.5, family = 'alfa', colour = c('#E8002D', '#27F4D2', '#FF004C'), fill = c('#FFF200', '#565F64', '#3671C6'), position = position_dodge(), direction = 'y', hjust='right', xlim = 24) +
+  # ggrepel::geom_text_repel(aes(Race_id, points, label = as.character(points)), data = . %>%
+  #                            filter(Race_id == 18 & points > 180), family = 'alfa', colour = '#FF87BC', hjust='right', xlim = 24.5, size = 6) +
+  # ggrepel::geom_label_repel(aes(Race_id, points, label = driver), data = . %>%
+  #                             filter(Race_id == 18 & points > 180), size = 6, label.size  = 0.5, family = 'alfa', colour = c('#229971', '#565F64', '#FF004C',  '#FF004C'), fill = c('grey90', '#27F4D2', '#3671C6', '#3671C6'), position = position_dodge(), direction = 'y', hjust='right', xlim = 24) +
   darklyplot::theme_dark2() +
   theme(legend.position = "none",
         plot.margin = unit(c(50, 20, 20, 20), "pt"),
