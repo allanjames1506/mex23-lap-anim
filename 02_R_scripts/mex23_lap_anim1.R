@@ -1220,33 +1220,32 @@ anim_save("./04_gifs/anim_drivers_2023.gif")
 
 # 11 Road sign----
 
-road_sign_2024 <- read.csv('./00_raw_data/constructors_2024.csv') %>% 
+road_sign_2025 <- read.csv('./00_raw_data/constructors_2025.csv') %>% 
   pivot_longer(cols = 'Alpine':'Williams', names_to = 'constructor', values_to = 'points') %>% 
-  filter(constructor %in% c("McLaren", "Red_Bull", "Ferrari")) %>% 
+  filter(constructor %in% c("McLaren", "Mercedes", "Ferrari")) %>% 
   group_by(Race) %>% 
   arrange(Race, desc(points)) %>%
   ungroup() %>% 
-  mutate(constructor = case_when(constructor == 'Red_Bull' ~ 'Redbull',
-                                 constructor == 'McLaren' ~ 'Mclaren',
+  mutate(constructor = case_when(constructor == 'McLaren' ~ 'Mclaren',
                                  constructor == 'Ferrari' ~ 'Ferrari',
                                  TRUE ~ constructor)) %>% 
-  mutate(constructor = factor(constructor, levels = c('Redbull', 'Ferrari', 'Mclaren')))
+  mutate(constructor = factor(constructor, levels = c('Mercedes', 'Ferrari', 'Mclaren')))
 
-constructors_order <- c('Mclaren', 'Ferrari', 'Redbull')
+constructors_order <- c('Mclaren', 'Ferrari', 'Mercedes')
 text_colours <- c('white', 'white', 'white')
 mway <- '( F1 World )'
-caption <- 'hey-jay'
+caption <- '@aljam51'
 
-road_sign_animate_simple <- road_sign_2024 %>%
+road_sign_animate_simple <- road_sign_2025 %>%
   group_by(constructor, Race) %>% 
   arrange(Race, desc(points)) %>%
   ungroup() %>% 
   ggplot(aes(x = factor(constructor), y = as.integer(points), group = constructor, colour = constructor)) +
   geom_col(fill = "#2C6844", colour = "#2C6844") +
-  geom_text(aes(y = 585, label = format(round(points))), fontface = 'bold', family = 'roboto', size = 24, hjust = 1) +
-  geom_text(aes(y = 20 , label = constructor, colour = constructor), fontface = 'bold', family = 'roboto', size = 24, hjust = 0) +
+  geom_text(aes(y = 411, label = format(round(points))), fontface = 'bold', family = 'roboto', size = 24, hjust = 1) +
+  geom_text(aes(y = 10 , label = constructor, colour = constructor), fontface = 'bold', family = 'roboto', size = 24, hjust = 0) +
   geom_text(aes(x = 4, y = max(points) , label = as.factor(Race_id)), col = "white", fontface = 'bold', family = 'roboto', size = 24, hjust = 1.1) +
-  geom_label(aes(x = 4, y = 20, label = mway), fill = "#3376B9", label.size = 1.7, label.padding = unit(0.35, "lines"), fontface = 'bold', family = 'roboto', size = 24, hjust = 0) +
+  geom_label(aes(x = 4, y = 10, label = mway), fill = "#3376B9", label.size = 1.7, label.padding = unit(0.35, "lines"), fontface = 'bold', family = 'roboto', size = 24, hjust = 0) +
   scale_colour_manual(values = text_colours) +
   theme_void() +
   theme(legend.position="none",
@@ -1256,11 +1255,12 @@ road_sign_animate_simple <- road_sign_2024 %>%
   guides(size = "none") +
   scale_size_area(max_size = 10) +
   coord_flip(clip = "off", expand = FALSE) +
-  expand_limits(y=c(-20, 615), x = c(0, 5)) +
-  annotate('text', x = 0.25, y = 308, label = 'design | hey-jay' , color="#F8D54E", fontface = 'bold', family = 'roboto', size = 12, hjust = 0.5) +
+  expand_limits(y=c(-10, 433), x = c(0, 5)) +
+  annotate('text', x = 0.25, y = 216, label = 'design | @aljam51' , color="#F8D54E", fontface = 'bold', family = 'roboto', size = 12, hjust = 0.5) +
   #scale_y_reverse() +
   transition_reveal(Race_id) 
 
-animate(road_sign_animate_simple, nframes = 250, end_pause = 100, height = 555, width = 800)
+#animate(road_sign_animate_simple, nframes = 250, end_pause = 100, height = 555, width = 800)
+animate(road_sign_animate_simple, nframes = 125, end_pause = 30, height = 555, width = 800)
 
-anim_save("./04_gifs/road_sign_test_2024_roboto_v3.gif")
+anim_save("./04_gifs/road_sign_test_2025_roboto_v3.gif")
